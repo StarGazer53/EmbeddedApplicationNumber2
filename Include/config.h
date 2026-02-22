@@ -1,32 +1,41 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <stdint.h>
+#include <stdbool.h>
+
 /* =========================================================
- * Project Configuration
+ * Build-time mode select
  * =========================================================
- * Set USE_FPGA_IO to 0 for stub mode (safe anywhere).
- * Set USE_FPGA_IO to 1 to use /dev/mem MMIO on the DE10.
+ * 0 = Stub I/O (safe to run anywhere)
+ * 1 = Real /dev/mem MMIO via HPS-to-FPGA Lightweight Bridge
+ *
+ * You can override at build time:
+ *   make CFLAGS_EXTRA='-DUSE_FPGA_IO=1'
  */
+#ifndef USE_FPGA_IO
 #define USE_FPGA_IO 0
+#endif
 
 /* Main loop delay (milliseconds) */
+#ifndef LOOP_DELAY_MS
 #define LOOP_DELAY_MS 100
+#endif
 
 /* =========================================================
- * HPS-to-FPGA Lightweight Bridge (common default)
+ * DE10-Standard Lightweight HPS-to-FPGA bridge
  * =========================================================
- * NOTE: These addresses/offsets can vary depending on the
- * Qsys/Platform Designer design you are using.
- * If your board image uses different offsets, update them here.
+ * These are the common defaults for the DE10-Standard image.
+ * If your Platform Designer design differs, update here.
  */
 #define LW_BRIDGE_BASE   0xFF200000u
 #define LW_BRIDGE_SPAN   0x00005000u
 
-/* Common “typical” offsets (adjust if needed) */
-#define OFS_LEDR         0x0000u  /* LEDs register */
-#define OFS_HEX3_HEX0    0x0020u  /* HEX3-0 register */
-#define OFS_HEX5_HEX4    0x0030u  /* HEX5-4 register */
-#define OFS_SW           0x0040u  /* Switches register */
-#define OFS_KEY          0x0050u  /* Push-buttons register */
+/* Common peripheral offsets (Terasic default design) */
+#define OFS_LEDR         0x0000u  /* LEDR[9:0] */
+#define OFS_HEX3_HEX0    0x0020u  /* HEX3-0 */
+#define OFS_HEX5_HEX4    0x0030u  /* HEX5-4 */
+#define OFS_SW           0x0040u  /* SW[9:0] */
+#define OFS_KEY          0x0050u  /* KEY[3:0] */
 
 #endif

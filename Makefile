@@ -1,8 +1,11 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c99 -Iinclude
+# Build-time overrides (examples):
+#   make CFLAGS_EXTRA='-DUSE_FPGA_IO=1'
+#   make CFLAGS_EXTRA='-DUSE_FPGA_IO=1 -DLOOP_DELAY_MS=50'
+CFLAGS=-Wall -Wextra -std=c99 -Iinclude $(CFLAGS_EXTRA)
 LDFLAGS=
 
-TARGET=release1_app
+TARGET=release2_app
 
 SRC=src/main.c src/io.c src/stubs.c src/app.c
 OBJ=$(SRC:.c=.o)

@@ -1,30 +1,39 @@
 #include "stubs.h"
 
-/* =========================================================
- * Release 1 Stub Functions
- * ========================================================= */
+#include <stdint.h>
 
-/* PSEUDOCODE (stub_get_fake_sensor_percent)
- * 1) Keep an internal static counter.
- * 2) Increment it each time the function is called.
- * 3) Wrap it into 0..100 using modulo.
- * 4) Return the result as “fake sensor percent”.
- */
-uint32_t stub_get_fake_sensor_percent(void)
-{
-  static uint32_t x = 0;
-  x = (x + 7) % 101; /* deterministic “fake” pattern */
-  return x;
-}
-
-/* PSEUDOCODE (stub_get_fake_uptime_seconds)
- * 1) Keep a static seconds counter.
- * 2) Increment it periodically whenever called.
- * 3) Return it as “fake uptime”.
+/*
+ * Stub time source (Iteration 2).
+ *
+ * Why this exists:
+ *  - The FPGA hardware timer/counter may not be implemented yet.
+ *  - The application still needs a "current time" value for alarm logic.
+ *
+ * Current implementation (fake):
+ *  - Keep a static counter
+ *  - Each call increments the counter by 1
+ *  - Return the updated value
+ *
+ * Future implementation (FPGA timer register):
+ *  - Read TIMER_COUNTER register via MMIO
+ *  - Convert ticks to seconds using a known clock frequency/prescaler
+ *  - Return seconds
  */
 uint32_t stub_get_fake_uptime_seconds(void)
 {
-  static uint32_t s = 0;
-  s++;
-  return s;
+  static uint32_t t = 0;
+  t += 1;
+  return t;
+}
+
+/*
+ * Stub sensor percentage.
+ *
+ * Pseudocode:
+ *  - Use uptime modulo 101 to create a predictable 0..100 sweep
+ *  - Return that value
+ */
+uint32_t stub_get_fake_sensor_percent(uint32_t uptime_seconds)
+{
+  return (uptime_seconds % 101u);
 }
