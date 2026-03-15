@@ -1,5 +1,5 @@
 Smart Alarm Clock with FPGA Timer
-Milestone 3 – Iteration 2
+Milestone 4 – Iteration 3
 ARM HPS + FPGA MMIO Integration
 Caleb Aguiar – SWE-450
 
