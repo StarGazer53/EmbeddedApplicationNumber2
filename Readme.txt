@@ -1,113 +1,34 @@
-Smart Alarm Clock with FPGA Timer
-Milestone 4 – Iteration 3
-ARM HPS + FPGA MMIO Integration
-Caleb Aguiar – SWE-450
+# Smart Alarm Clock with FPGA Timer  
+## Final Project Release – Milestone 5  
 
-WHAT THIS PROGRAM DOES
+### Overview
+The Smart Alarm Clock is an embedded systems application developed on the Terasic DE10-Standard platform. The system integrates an ARM Hard Processor System (HPS) application with FPGA-based hardware using memory-mapped I/O (MMIO) through the lightweight HPS-to-FPGA bridge.
 
-This application runs on the ARM Hard Processor System (HPS) of the Terasic DE10-Standard board and integrates with FPGA peripherals using memory-mapped I/O (MMIO).
+The application provides alarm functionality, real-time display output, and hardware interaction through switches, push-buttons, LEDs, and HEX displays. The system demonstrates integration between software control logic and FPGA-based I/O.
 
-The program:
+---
 
-Reads physical switch input (SW[9:0]) from FPGA registers
+### Features
+- Alarm enable/disable using hardware switches  
+- Alarm trigger based on system time  
+- LED indication for system state and alarm activity  
+- HEX display output for time visualization  
+- Memory-mapped I/O communication with FPGA  
+- Dual operation modes:
+  - Stub mode (software simulation)
+  - FPGA MMIO mode (hardware interaction)
 
-Reads push-button input (KEY[3:0], active-low)
+---
 
-Displays time on the HEX 7-segment displays
+### System Architecture
+The system is composed of:
 
-Controls LEDR[9:0] outputs
+- ARM HPS Application (C program)
+- FPGA peripheral registers (switches, keys, LEDs, HEX)
+- Lightweight HPS-to-FPGA bridge for communication
 
-Implements alarm enable, trigger, and reset logic
+The ARM application reads inputs from FPGA registers and updates outputs based on system logic.
 
-Alarm Behavior:
+---
 
-SW0 enables the alarm
-
-When the current time reaches the preset alarm time (30 seconds), the alarm triggers
-
-When triggered, LEDs blink
-
-Pressing KEY0 resets the alarm
-
-Time is displayed continuously on HEX displays
-
-The system supports two execution modes:
-
-Stub Mode (simulation – no hardware required)
-
-FPGA MMIO Mode (real hardware interaction using /dev/mem)
-
-HOW TO COMPILE
-
-Navigate to the project directory:
-
-cd ~/Embedded-Application-
-
-(or your project folder location)
-
-Compile in Stub Mode (Safe Mode)
-
-This mode does not require FPGA hardware access.
-
-make clean
-make
-
-Compile in FPGA MMIO Mode (Hardware Mode)
-
-This enables real hardware access using /dev/mem.
-
-make clean
-make CFLAGS_EXTRA='-DUSE_FPGA_IO=1'
-
-HOW TO RUN
-
-Stub Mode:
-
-./release2_app
-
-FPGA MMIO Mode (must use sudo):
-
-sudo ./release2_app
-
-HOW TO DEMONSTRATE FUNCTIONALITY
-
-Start the program in MMIO mode:
-sudo ./release2_app
-
-Ensure SW0 is OFF:
-
-Alarm is disabled
-
-LEDs remain off
-
-Turn SW0 ON:
-
-Alarm becomes enabled
-
-When time reaches 30 seconds:
-
-LEDs blink (alarm active)
-
-Press KEY0:
-
-Alarm resets
-
-LEDs stop blinking
-
-Press Ctrl+C to exit cleanly
-
-CONFIGURATION
-
-Hardware base address:
-
-LW_BRIDGE_BASE = 0xFF200000
-
-Default register offsets:
-
-LEDR 0x0000
-HEX3_HEX0 0x0020
-HEX5_HEX4 0x0030
-SW 0x0040
-KEY 0x0050
-
-If the FPGA design changes, update these values in include/config.h.
+### Project Structure

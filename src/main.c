@@ -4,31 +4,41 @@
 
 #include <stdio.h>
 #include <signal.h>
-#include <stdbool.h>
+
+/* =========================================================
+ * Smart Alarm Clock with FPGA Timer
+ * Final Project Release - Milestone 5
+ * ========================================================= */
 
 static volatile sig_atomic_t g_run = 1;
 
+/*
+ * Handle Ctrl+C and request a clean shutdown.
+ */
 static void on_sigint(int sig)
 {
   (void)sig;
   g_run = 0;
 }
 
+/*
+ * Program entry point.
+ */
 int main(void)
 {
   signal(SIGINT, on_sigint);
 
 #if USE_FPGA_IO
-  printf("=== Embedded App Release 2 (Milestone 3) ===\n");
+  printf("=== Smart Alarm Clock Final Release (Milestone 5) ===\n");
   printf("Mode: FPGA MMIO (/dev/mem)\n");
 #else
-  printf("=== Embedded App Release 2 (Milestone 3) ===\n");
-  printf("Mode: STUB I/O (safe mode)\n");
+  printf("=== Smart Alarm Clock Final Release (Milestone 5) ===\n");
+  printf("Mode: STUB I/O\n");
 #endif
 
   if (!io_init())
   {
-    printf("I/O init failed. Exiting.\n");
+    printf("I/O initialization failed. Exiting.\n");
     return 1;
   }
 
@@ -38,6 +48,7 @@ int main(void)
   while (g_run)
   {
     io_inputs_t in;
+
     if (!io_read_inputs(&in))
     {
       printf("WARN: io_read_inputs failed (continuing)\n");
@@ -48,6 +59,6 @@ int main(void)
   }
 
   io_close();
-  printf("Exiting cleanly.\n");
+  printf("Application exited cleanly.\n");
   return 0;
 }

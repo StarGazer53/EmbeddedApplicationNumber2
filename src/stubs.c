@@ -1,37 +1,28 @@
 #include "stubs.h"
 
-#include <stdint.h>
+/* =========================================================
+ * Support timing and diagnostic helpers
+ * ========================================================= */
 
 /*
- * Stub time source (Iteration 2).
+ * Return a monotonically increasing uptime value.
  *
- * Why this exists:
- *  - The FPGA hardware timer/counter may not be implemented yet.
- *  - The application still needs a "current time" value for alarm logic.
- *
- * Current implementation (fake):
- *  - Keep a static counter
- *  - Each call increments the counter by 1
- *  - Return the updated value
- *
- * Future implementation (FPGA timer register):
- *  - Read TIMER_COUNTER register via MMIO
- *  - Convert ticks to seconds using a known clock frequency/prescaler
- *  - Return seconds
+ * This function provides a deterministic software time
+ * source used by the final application when a dedicated
+ * hardware timer source is not being exercised.
  */
 uint32_t stub_get_fake_uptime_seconds(void)
 {
-  static uint32_t t = 0;
-  t += 1;
+  static uint32_t t = 0u;
+  t += 1u;
   return t;
 }
 
 /*
- * Stub sensor percentage.
+ * Generate a predictable diagnostic percentage value.
  *
- * Pseudocode:
- *  - Use uptime modulo 101 to create a predictable 0..100 sweep
- *  - Return that value
+ * The returned value cycles from 0 to 100 to support
+ * logging and state validation during execution.
  */
 uint32_t stub_get_fake_sensor_percent(uint32_t uptime_seconds)
 {
