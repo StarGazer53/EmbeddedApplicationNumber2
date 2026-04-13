@@ -32,3 +32,58 @@ The ARM application reads inputs from FPGA registers and updates outputs based o
 ---
 
 ### Project Structure
+project_root/
+│
+├── src/
+│ ├── main.c
+│ ├── app.c
+│ ├── io.c
+│ └── stubs.c
+│
+├── include/
+│ ├── app.h
+│ ├── io.h
+│ ├── stubs.h
+│ └── config.h
+│
+├── Makefile
+└── README.md
+
+---
+
+Build Instructions
+
+Compile (Stub Mode)
+make clean
+make
+
+Compile (FPGA MMIO Mode)
+make clean
+make CFLAGS_EXTRA='-DUSE_FPGA_IO=1'
+
+Run Instructions
+Run in Stub Mode
+./release5_app
+
+Run in FPGA Mode (on DE10 board)
+sudo ./release5_app
+
+Controls
+Input	Function
+SW0	    Enable/Disable Alarm
+KEY0	Reset Alarm
+
+Output Behavior
+LEDR0  indicates alarm enabled state
+LEDs   blink when alarm is active
+HEX    displays show current system time
+FPGA   Integration
+
+The system uses memory-mapped I/O to communicate with FPGA hardware registers:
+
+Switch input register (SW)
+Push-button register (KEY)
+LED output register (LEDR)
+HEX display registers (HEX0–HEX5)
+
+FPGA logic was validated through Quartus compilation and logical verification.
